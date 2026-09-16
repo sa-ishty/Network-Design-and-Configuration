@@ -1,0 +1,63 @@
+Basic Router Configuration
+==========================
+1. Configure Router Hostname
+----------------------------
+Router(config)#hostname AIUB
+
+2. Configure IP Domain Name
+---------------------------
+AIUB(config)#ip domain-name aiub.edu
+
+3. Secure the Privileged EXEC Mode
+----------------------------------
+AIUB(config)#enable password cricket
+Saves the password as plain-text in the configuration file. So it is not secured.
+
+AIUB(config)#enable secret cricket
+Saves the password as encrypted-text in the configuration file. So it is secured.
+
+4. Secure all the ways to access the Router
+-------------------------------------------
+2 ways to access a router:
+a) Physically using console port
+b) Remotely using vty port
+
+AIUB(config)#line console 0
+AIUB(config-line)#password football
+AIUB(config-line)#login
+AIUB(config-line)#exit
+
+AIUB(config)#line vty 0 4
+AIUB(config-line)#password baseball
+AIUB(config-line)#login
+AIUB(config-line)#exit
+
+5. Enable Password Encryption Service
+-------------------------------------
+AIUB(config)#service password-encryption
+
+6. Enable IPv6 Unicast Routing
+------------------------------
+AIUB(config)#ipv6 unicast-routing
+
+7. Configure IP Addressing
+--------------------------
+AIUB(config)#interface Fa0/0
+AIUB(config-if)#ip address 172.16.1.1 255.255.255.0
+AIUB(config-if)#ipv6 address 2001:211:A:1::1/64
+AIUB(config-if)#no shutdown
+AIUB(config-if)#exit
+
+8. Configure User Database
+--------------------------
+AIUB(config)#username abul secret kabul
+AIUB(config)#username kuddus secret boyati
+
+9. Enable in-band Authentication
+--------------------------------
+AIUB(config)#line console 0
+AIUB(config-line)#login local
+AIUB(config-line)#exit
+AIUB(config)#line vty 0 4
+AIUB(config-line)#login local
+AIUB(config-line)#exit

@@ -1,0 +1,60 @@
+Configuring DHCPv4
+==================
+BR(config)#ip dhcp excluded-address 172.16.1.1 172.16.1.10
+
+BR(config)#ip dhcp pool UserPool
+BR(dhcp-config)#network 172.16.1.0 255.255.255.0
+BR(dhcp-config)#default-router 172.16.1.1
+BR(dhcp-config)#dns-server 8.8.8.8
+BR(dhcp-config)#exit
+
+BR#show ip dhcp binding 
+IP address       Client-ID/              Lease expiration        Type
+                 Hardware address
+172.16.1.12      00E0.F99C.520D           --                     Automatic
+172.16.1.11      0005.5EA0.2ED5           --                     Automatic
+
+Configuring Stateless DHCPv6
+============================
+BR(config)#ipv6 dhcp pool Stateless-DHCPv6
+BR(config-dhcpv6)#dns-server 2001:4860:4860::8888
+BR(config-dhcpv6)#exit
+
+BR(config)#int g0/0/0
+BR(config-if)#ipv6 dhcp server Stateless-DHCPv6
+BR(config-if)#ipv6 nd other-config-flag
+BR(config-if)#exit
+
+BR#show ipv6 dhcp binding
+
+Configuring Stateful DHCPv6
+===========================
+BR(config)#interface gigabitEthernet 0/0/0
+
+BR(config-if)#ipv6 address 2001:211:A:1::1/64
+BR(config-if)#no shutdown 
+
+BR(config)#ipv6 unicast-routing
+BR(config)#ipv6 dhcp pool Stateful-DHCPv6
+BR(config-dhcpv6)#address prefix 2001:211:A:1::/64
+BR(config-dhcpv6)#dns-server 2001:4860:4860::8888
+BR(config-dhcpv6)#exit
+
+BR(config)#interface g0/0/0
+BR(config-if)#ipv6 dhcp server Stateful-DHCPv6
+BR(config-if)#ipv6 nd managed-config-flag 
+BR(config-if)#exit
+
+BR#show ipv6 dhcp binding 
+Client: FE80::2E0:F7FF:FE18:BBAE
+  DUID: 00010001ADD5699800E0F718BBAE
+  IA NA: IA ID 51139825, T1 0, T2 0
+    Address: 2001:211:A:1:4F20:24FC:166A:8C8
+            preferred lifetime 86400, valid lifetime 172800
+            expires at September 5 2026 7:33:59 pm (172800 seconds)
+Client: FE80::201:C7FF:FE9D:2E2B
+  DUID: 00010001C64571950001C79D2E2B
+  IA NA: IA ID 768906712, T1 0, T2 0
+    Address: 2001:211:A:1:7636:4C70:214B:13B9
+            preferred lifetime 86400, valid lifetime 172800
+            expires at September 5 2026 7:33:59 pm (172800 seconds)
